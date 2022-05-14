@@ -1,0 +1,6 @@
+{
+  note "case2 using jams"
+  func adder
+  args [1 2]
+  want ["" 3]
+}

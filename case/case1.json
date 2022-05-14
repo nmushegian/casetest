@@ -1,4 +1,5 @@
 {
+    "note": "case1 using json",
     "func": "adder",
     "args": [1, 2],
     "want": ["", 3]
