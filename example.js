@@ -5,7 +5,7 @@ lib.adder =(a,b)=> [0, a+b] // result type
 
 const argsConverter = (s) => {
     const n = Number(s)
-    return isFinite(n) ? n : s
+    return isFinite(n) && !isNaN(n) ? n : s
 }
 
 casetest('./case', (t, {func,args,want})=>{
