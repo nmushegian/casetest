@@ -3,6 +3,7 @@
     "type": "module",
     "version": "0.0.3",
     "dependencies": {
+        "jams.js": "^0.0.5",
         "tapzero": "^0.6.1"
     }
 }

@@ -1,19 +1,35 @@
 import { test } from 'tapzero'
 import { readdirSync, readFileSync } from 'fs'
+import path from 'path'
+import { jams } from 'jams.js/jams.js'
+
+const fileParserHandler = {
+    json: function (data) {
+        return JSON.parse(data)
+    },
+    jams: function (data) {
+        // Convert `data` type from Buffer to String
+        return jams(data.toString())
+    }
+}
+
+const clean = (ext) => (String(ext).substring(1))
 
 export function casetest(dir, f) {
     const cases = readdirSync(dir)
     cases.forEach(file => {
-        const data = readFileSync(dir + '/' + file) // TODO os.path
-        const json = JSON.parse(data)
-        test(`file ${file}\nnote ${json.note}`, t=>{
-            t.ok(json.func, 'no test func')
-            t.ok(json.args, 'no test args')
-            t.ok(json.want, 'no test want')
-            t.equal(json.want.length, 2,
+        const filepath = path.resolve(path.join(process.cwd(), dir, file))
+        const ext = clean(path.extname(filepath))
+        const data = readFileSync(filepath) // TODO os.path
+        const obj = fileParserHandler[ext](data)
+        test(`file ${file}\nnote ${obj.note}`, t=>{
+            t.ok(obj.func, 'no test func')
+            t.ok(obj.args, 'no test args')
+            t.ok(obj.want, 'no test want')
+            t.equal(obj.want.length, 2,
                     'want length must be 2, must use result type')
 
-            f(t, json)
+            f(t, obj)
         })
     })
 }
