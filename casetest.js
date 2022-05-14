@@ -9,9 +9,11 @@ export function casetest(dir, f) {
         test(`file ${file}\nnote ${json.note}`, t=>{
             t.ok(json.func, 'no test func')
             t.ok(json.args, 'no test args')
-            t.ok(json.args, 'no test want')
-            t.equal(json.args.length, 2,
-                    'args length is not 2, must use result type')
+            t.ok(json.want, 'no test want')
+            t.equal(json.want.length, 2,
+                    'want length must be 2, must use result type')
+
+            f(t, json)
         })
     })
 }
