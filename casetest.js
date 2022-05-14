@@ -3,16 +3,6 @@ import { readdirSync, readFileSync } from 'fs'
 import path from 'path'
 import { jams } from 'jams.js/jams.js'
 
-const fileParserHandler = {
-    json: function (data) {
-        return JSON.parse(data)
-    },
-    jams: function (data) {
-        // Convert `data` type from Buffer to String
-        return jams(data.toString())
-    }
-}
-
 const clean = (ext) => (String(ext).substring(1))
 
 export function casetest(dir, f) {
@@ -21,7 +11,18 @@ export function casetest(dir, f) {
         const filepath = path.resolve(path.join(process.cwd(), dir, file))
         const ext = clean(path.extname(filepath))
         const data = readFileSync(filepath) // TODO os.path
-        const obj = fileParserHandler[ext](data)
+
+        let obj
+
+        if (ext === 'json') {
+            obj = JSON.parse(data)
+        } else if (ext === 'jams') {
+            // Convert `data` type from Buffer to String
+            obj = jams(data.toString())
+        } else {
+            throw new Error('Unhandled filetype.')
+        }
+
         test(`file ${file}\nnote ${obj.note}`, t=>{
             t.ok(obj.func, 'no test func')
             t.ok(obj.args, 'no test args')
